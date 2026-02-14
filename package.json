@@ -1,0 +1,17 @@
+{
+  "name": "prompt-base",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "source backend/venv/bin/activate && uvicorn main:app --reload --port 8000 --app-dir backend",
+    "start": "concurrently \"npm:dev:*\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
