@@ -39,7 +39,7 @@ const PromptCard = ({ prompt }: { prompt: Prompt }) => {
             </div>
 
             {isExpanded && (
-                <div className="mt-4 pt-4 border-t border-slate-100">
+                <div className="mt-4 pt-4 border-t border-slate-100 animate-slideDown">
                     <div className="flex justify-between items-center mb-2">
                          <h5 className="text-sm font-semibold text-slate-500">プロンプト全文</h5>
                         <button onClick={handleCopy} className="p-1.5 rounded-lg hover:bg-violet-50 transition-colors duration-200">
@@ -47,10 +47,10 @@ const PromptCard = ({ prompt }: { prompt: Prompt }) => {
                         </button>
                     </div>
                     <p className="text-slate-700 whitespace-pre-wrap bg-violet-50/50 border border-violet-100 p-3 rounded-lg mb-4">{prompt.content}</p>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5">
                         {prompt.tags && prompt.tags.split(',').map(tag => tag.trim()).filter(t => t).map((tag, index) => (
-                            <span key={index} className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-violet-50 text-violet-700">
-                                #{tag}
+                            <span key={index} className="px-2.5 py-1 inline-flex items-center text-xs font-medium rounded-lg bg-gradient-to-r from-violet-50 to-indigo-50 text-violet-600 border border-violet-100/80 hover:border-violet-200 hover:shadow-sm transition-all duration-200 cursor-default">
+                                <span className="text-violet-400 mr-0.5">#</span>{tag}
                             </span>
                         ))}
                     </div>
@@ -132,7 +132,16 @@ function App() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold text-slate-800 mb-6">Saved Prompts</h2>
+          <h2 className="text-2xl font-bold text-slate-800 mb-6 tracking-tight">Saved Prompts</h2>
+
+          {Object.keys(groupedPrompts).length === 0 && (
+            <div className="text-center py-16 bg-white/40 backdrop-blur-sm rounded-2xl border border-white/60">
+              <SparklesIcon className="w-12 h-12 text-violet-300 mx-auto mb-4" />
+              <p className="text-slate-500 text-lg font-medium">まだプロンプトがありません</p>
+              <p className="text-slate-400 text-sm mt-1">上のフォームから最初のプロンプトを作成しましょう</p>
+            </div>
+          )}
+
           <div className="space-y-6">
             {Object.entries(groupedPrompts).map(([category, promptsInCategory]) => (
               <div key={category} className="bg-white/60 backdrop-blur-md shadow-md hover:shadow-lg border border-white/80 rounded-2xl overflow-hidden transition-all duration-300">
@@ -150,7 +159,7 @@ function App() {
                 </div>
 
                 {activeCategories[category] && (
-                  <div className="px-5 pb-5 space-y-3">
+                  <div className="px-5 pb-5 space-y-3 animate-slideDown">
                     {promptsInCategory.map((prompt) => (
                       <PromptCard key={prompt.id} prompt={prompt} />
                     ))}
@@ -161,6 +170,10 @@ function App() {
           </div>
         </div>
       </main>
+
+      <footer className="text-center py-6 text-slate-400 text-xs">
+        <p>Prompt Base &mdash; AI-Powered Prompt Manager</p>
+      </footer>
     </div>
   );
 }
