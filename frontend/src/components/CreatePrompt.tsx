@@ -140,14 +140,14 @@ export default function CreatePrompt({ onPromptCreated }: Props) {
             placeholder="ここにプロンプトを入力してください..."
             rows={5}
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow-sm appearance-none border border-slate-200 rounded-lg w-full py-2.5 px-3 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition duration-200"
           />
         </div>
 
         <button
           type="submit"
           disabled={isSuggesting}
-          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out disabled:bg-blue-400"
+          className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition duration-200 ease-in-out disabled:opacity-60"
         >
           {isSuggesting ? '分析中...' : 'AIでカテゴリを提案'}
         </button>

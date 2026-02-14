@@ -54,7 +54,7 @@ export default function CategorySuggestionModal({
           <label className="block text-gray-700 font-bold mb-2">
             1行要約
           </label>
-          <p className="bg-gray-100 p-3 rounded">{summary || '要約を生成できませんでした。'}</p>
+          <p className="bg-violet-50 border border-violet-100 p-3 rounded-lg text-slate-700">{summary || '要約を生成できませんでした。'}</p>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -100,7 +100,7 @@ export default function CategorySuggestionModal({
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 placeholder="新しいカテゴリ名"
-                className="mt-3 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="mt-3 shadow-sm appearance-none border border-slate-200 rounded-lg w-full py-2.5 px-3 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition duration-200"
                 autoFocus
               />
             )}
@@ -111,14 +111,14 @@ export default function CategorySuggestionModal({
               type="button"
               onClick={onClose}
               disabled={isSaving}
-              className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-400"
+              className="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 transition duration-200 disabled:opacity-60"
             >
               キャンセル
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-blue-400"
+              className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition duration-200 disabled:opacity-60"
             >
               {isSaving ? '保存中...' : 'この内容で保存'}
             </button>

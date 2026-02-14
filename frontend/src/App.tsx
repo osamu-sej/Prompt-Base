@@ -46,10 +46,10 @@ const PromptCard = ({ prompt }: { prompt: Prompt }) => {
                             {hasCopied ? <CheckIcon className="w-5 h-5 text-green-500" /> : <ClipboardDocumentIcon className="w-5 h-5 text-gray-500" />}
                         </button>
                     </div>
-                    <p className="text-gray-700 whitespace-pre-wrap bg-gray-50 p-3 rounded-md mb-4">{prompt.content}</p>
+                    <p className="text-slate-700 whitespace-pre-wrap bg-violet-50/50 border border-violet-100 p-3 rounded-lg mb-4">{prompt.content}</p>
                     <div className="flex flex-wrap gap-2">
                         {prompt.tags && prompt.tags.split(',').map(tag => tag.trim()).filter(t => t).map((tag, index) => (
-                            <span key={index} className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                            <span key={index} className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-violet-50 text-violet-700">
                                 #{tag}
                             </span>
                         ))}
@@ -104,7 +104,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-violet-50 to-indigo-50 font-sans">
       <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -121,7 +121,7 @@ function App() {
         </div>
 
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Saved Prompts</h2>
+          <h2 className="text-2xl font-bold text-slate-800 mb-6">Saved Prompts</h2>
           <div className="space-y-6">
             {Object.entries(groupedPrompts).map(([category, promptsInCategory]) => (
               <div key={category} className="bg-white/80 backdrop-blur-sm shadow-lg rounded-xl overflow-hidden">
@@ -130,7 +130,7 @@ function App() {
                   onClick={() => toggleCategory(category)}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
+                    <span className="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-gradient-to-r from-violet-100 to-indigo-100 text-violet-800">
                         {category}
                     </span>
                     <span className="text-gray-500 text-sm">{promptsInCategory.length} prompts</span>
