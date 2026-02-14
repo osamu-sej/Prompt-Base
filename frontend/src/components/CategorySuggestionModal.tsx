@@ -46,12 +46,12 @@ export default function CategorySuggestionModal({
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-      <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg">
-        <h2 className="text-2xl font-bold mb-4">AIによる分析結果</h2>
-        
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex justify-center items-center px-4">
+      <div className="bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-white/80 w-full max-w-lg">
+        <h2 className="text-2xl font-bold mb-4 text-slate-800">AIによる分析結果</h2>
+
         <div className="mb-6">
-          <label className="block text-gray-700 font-bold mb-2">
+          <label className="block text-slate-600 font-semibold mb-2 text-sm">
             1行要約
           </label>
           <p className="bg-violet-50 border border-violet-100 p-3 rounded-lg text-slate-700">{summary || '要約を生成できませんでした。'}</p>
@@ -59,12 +59,12 @@ export default function CategorySuggestionModal({
 
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2">
+            <label className="block text-slate-600 font-semibold mb-2 text-sm">
               カテゴリの提案
             </label>
             <div className="space-y-2">
               {suggestedCategories.map((cat) => (
-                <label key={cat} className="flex items-center">
+                <label key={cat} className="flex items-center p-2.5 rounded-xl cursor-pointer hover:bg-violet-50/50 transition-colors duration-200">
                   <input
                     type="radio"
                     name="category"
@@ -74,12 +74,12 @@ export default function CategorySuggestionModal({
                       setSelectedCategory(cat);
                       setIsCustomCategory(false);
                     }}
-                    className="mr-2"
+                    className="mr-3 w-4 h-4 text-violet-600 focus:ring-violet-500"
                   />
-                  {cat}
+                  <span className="text-slate-700">{cat}</span>
                 </label>
               ))}
-              <label className="flex items-center">
+              <label className="flex items-center p-2.5 rounded-xl cursor-pointer hover:bg-violet-50/50 transition-colors duration-200">
                 <input
                   type="radio"
                   name="category"
@@ -87,11 +87,11 @@ export default function CategorySuggestionModal({
                   checked={isCustomCategory}
                   onChange={() => {
                     setIsCustomCategory(true);
-                    setSelectedCategory(''); // カスタム選択時にテキスト入力をクリア
+                    setSelectedCategory('');
                   }}
-                  className="mr-2"
+                  className="mr-3 w-4 h-4 text-violet-600 focus:ring-violet-500"
                 />
-                その他（自由入力）
+                <span className="text-slate-700">その他（自由入力）</span>
               </label>
             </div>
             {isCustomCategory && (

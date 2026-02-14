@@ -29,21 +29,21 @@ const PromptCard = ({ prompt }: { prompt: Prompt }) => {
     };
 
     return (
-        <div className="bg-white shadow rounded-md p-5 transition-all duration-300">
+        <div className="bg-white/70 backdrop-blur-sm shadow-sm hover:shadow-md border border-white/80 rounded-xl p-5 transition-all duration-300 hover:-translate-y-0.5 border-l-4 border-l-violet-400">
             <div className="flex items-center justify-between cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
-                <div>
-                    <h4 className="text-md font-bold text-gray-800">{prompt.title}</h4>
-                    <p className="text-sm text-gray-500 mt-1">{prompt.summary}</p>
+                <div className="min-w-0 flex-1 mr-3">
+                    <h4 className="text-md font-bold text-slate-800">{prompt.title}</h4>
+                    <p className="text-sm text-slate-500 mt-1 truncate">{prompt.summary}</p>
                 </div>
-                <ChevronDownIcon className={`w-5 h-5 text-gray-500 transform transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                <ChevronDownIcon className={`w-5 h-5 text-slate-400 flex-shrink-0 transform transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
             </div>
 
             {isExpanded && (
-                <div className="mt-4 pt-4 border-t border-gray-200">
+                <div className="mt-4 pt-4 border-t border-slate-100">
                     <div className="flex justify-between items-center mb-2">
-                         <h5 className="text-sm font-semibold text-gray-600">プロンプト全文</h5>
-                        <button onClick={handleCopy} className="p-1.5 rounded-md hover:bg-gray-100 transition-colors">
-                            {hasCopied ? <CheckIcon className="w-5 h-5 text-green-500" /> : <ClipboardDocumentIcon className="w-5 h-5 text-gray-500" />}
+                         <h5 className="text-sm font-semibold text-slate-500">プロンプト全文</h5>
+                        <button onClick={handleCopy} className="p-1.5 rounded-lg hover:bg-violet-50 transition-colors duration-200">
+                            {hasCopied ? <CheckIcon className="w-5 h-5 text-emerald-500" /> : <ClipboardDocumentIcon className="w-5 h-5 text-slate-400 hover:text-violet-500" />}
                         </button>
                     </div>
                     <p className="text-slate-700 whitespace-pre-wrap bg-violet-50/50 border border-violet-100 p-3 rounded-lg mb-4">{prompt.content}</p>
@@ -135,22 +135,22 @@ function App() {
           <h2 className="text-2xl font-bold text-slate-800 mb-6">Saved Prompts</h2>
           <div className="space-y-6">
             {Object.entries(groupedPrompts).map(([category, promptsInCategory]) => (
-              <div key={category} className="bg-white/80 backdrop-blur-sm shadow-lg rounded-xl overflow-hidden">
+              <div key={category} className="bg-white/60 backdrop-blur-md shadow-md hover:shadow-lg border border-white/80 rounded-2xl overflow-hidden transition-all duration-300">
                 <div
-                  className="p-5 flex justify-between items-center cursor-pointer hover:bg-gray-50/50 transition-colors"
+                  className="p-5 flex justify-between items-center cursor-pointer hover:bg-violet-50/30 transition-colors duration-200"
                   onClick={() => toggleCategory(category)}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-gradient-to-r from-violet-100 to-indigo-100 text-violet-800">
+                    <span className="px-3.5 py-1.5 inline-flex text-sm leading-5 font-semibold rounded-lg bg-gradient-to-r from-violet-100 to-indigo-100 text-violet-700 shadow-sm">
                         {category}
                     </span>
-                    <span className="text-gray-500 text-sm">{promptsInCategory.length} prompts</span>
+                    <span className="text-slate-400 text-sm font-medium">{promptsInCategory.length} prompts</span>
                   </div>
-                  <ChevronDownIcon className={`w-6 h-6 text-gray-500 transform transition-transform ${activeCategories[category] ? 'rotate-180' : ''}`} />
+                  <ChevronDownIcon className={`w-5 h-5 text-slate-400 transform transition-transform duration-300 ${activeCategories[category] ? 'rotate-180' : ''}`} />
                 </div>
-                
+
                 {activeCategories[category] && (
-                  <div className="px-5 pb-5 space-y-4">
+                  <div className="px-5 pb-5 space-y-3">
                     {promptsInCategory.map((prompt) => (
                       <PromptCard key={prompt.id} prompt={prompt} />
                     ))}

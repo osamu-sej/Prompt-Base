@@ -119,18 +119,18 @@ export default function CreatePrompt({ onPromptCreated }: Props) {
 
   return (
     <>
-      <form onSubmit={handleSuggestCategory} className="mb-8 bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Create New Prompt</h2>
+      <form onSubmit={handleSuggestCategory} className="mb-8 bg-white/60 backdrop-blur-md p-6 rounded-2xl shadow-md hover:shadow-lg border border-white/80 transition-all duration-300">
+        <h2 className="text-2xl font-bold mb-4 text-slate-800">Create New Prompt</h2>
 
         {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl relative mb-4" role="alert">
                 <strong className="font-bold">エラー: </strong>
                 <span className="block sm:inline">{error}</span>
             </div>
         )}
-        
-        <div className="mb-4">
-          <label htmlFor="content" className="block text-gray-700 font-bold mb-2">
+
+        <div className="mb-5">
+          <label htmlFor="content" className="block text-slate-600 font-semibold mb-2 text-sm">
             Prompt
           </label>
           <textarea
