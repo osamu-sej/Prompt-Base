@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import CreatePrompt from './components/CreatePrompt';
-import { ChevronDownIcon, ClipboardDocumentIcon, CheckIcon } from '@heroicons/react/24/outline'; // アイコンをインポート
+import { ChevronDownIcon, ClipboardDocumentIcon, CheckIcon, SparklesIcon } from '@heroicons/react/24/outline'; // アイコンをインポート
 import './index.css';
 
 // Promptの型定義を更新
@@ -105,11 +105,22 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-violet-50 to-indigo-50 font-sans">
-      <header className="bg-white shadow-sm sticky top-0 z-10">
+      <header className="bg-gradient-to-r from-violet-700 via-indigo-700 to-violet-800 shadow-lg sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">Prompt Base</h1>
+          <div className="flex justify-between h-16 items-center">
+            <div className="flex items-center gap-3">
+              <div className="bg-white/15 backdrop-blur-sm p-2 rounded-lg">
+                <SparklesIcon className="w-6 h-6 text-violet-200" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-white tracking-wide">Prompt Base</h1>
+                <p className="text-violet-200 text-xs -mt-0.5">AI-Powered Prompt Manager</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-500/30 text-violet-200 border border-violet-400/30">
+                v1.0
+              </span>
             </div>
           </div>
         </div>
