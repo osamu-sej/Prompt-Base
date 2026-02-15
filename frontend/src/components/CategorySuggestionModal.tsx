@@ -46,25 +46,25 @@ export default function CategorySuggestionModal({
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
-      <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg">
-        <h2 className="text-2xl font-bold mb-4">AIによる分析結果</h2>
-        
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex justify-center items-center px-4 animate-fadeIn">
+      <div className="bg-white/90 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-white/80 w-full max-w-lg animate-scaleIn">
+        <h2 className="text-2xl font-bold mb-4 text-slate-800">AIによる分析結果</h2>
+
         <div className="mb-6">
-          <label className="block text-gray-700 font-bold mb-2">
+          <label className="block text-slate-600 font-semibold mb-2 text-sm">
             1行要約
           </label>
-          <p className="bg-gray-100 p-3 rounded">{summary || '要約を生成できませんでした。'}</p>
+          <p className="bg-violet-50 border border-violet-100 p-3 rounded-lg text-slate-700">{summary || '要約を生成できませんでした。'}</p>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2">
+            <label className="block text-slate-600 font-semibold mb-2 text-sm">
               カテゴリの提案
             </label>
             <div className="space-y-2">
               {suggestedCategories.map((cat) => (
-                <label key={cat} className="flex items-center">
+                <label key={cat} className="flex items-center p-2.5 rounded-xl cursor-pointer hover:bg-violet-50/50 transition-colors duration-200">
                   <input
                     type="radio"
                     name="category"
@@ -74,12 +74,12 @@ export default function CategorySuggestionModal({
                       setSelectedCategory(cat);
                       setIsCustomCategory(false);
                     }}
-                    className="mr-2"
+                    className="mr-3 w-4 h-4 text-violet-600 focus:ring-violet-500"
                   />
-                  {cat}
+                  <span className="text-slate-700">{cat}</span>
                 </label>
               ))}
-              <label className="flex items-center">
+              <label className="flex items-center p-2.5 rounded-xl cursor-pointer hover:bg-violet-50/50 transition-colors duration-200">
                 <input
                   type="radio"
                   name="category"
@@ -87,11 +87,11 @@ export default function CategorySuggestionModal({
                   checked={isCustomCategory}
                   onChange={() => {
                     setIsCustomCategory(true);
-                    setSelectedCategory(''); // カスタム選択時にテキスト入力をクリア
+                    setSelectedCategory('');
                   }}
-                  className="mr-2"
+                  className="mr-3 w-4 h-4 text-violet-600 focus:ring-violet-500"
                 />
-                その他（自由入力）
+                <span className="text-slate-700">その他（自由入力）</span>
               </label>
             </div>
             {isCustomCategory && (
@@ -100,27 +100,35 @@ export default function CategorySuggestionModal({
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 placeholder="新しいカテゴリ名"
-                className="mt-3 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="mt-3 shadow-sm appearance-none border border-slate-200 rounded-lg w-full py-2.5 px-3 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition duration-200"
                 autoFocus
               />
             )}
           </div>
 
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-end space-x-3 pt-2">
             <button
               type="button"
               onClick={onClose}
               disabled={isSaving}
-              className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-gray-400"
+              className="bg-slate-100 hover:bg-slate-200 active:scale-[0.98] text-slate-600 font-semibold py-2.5 px-5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               キャンセル
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:bg-blue-400"
+              className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 active:scale-[0.98] text-white font-semibold py-2.5 px-5 rounded-xl shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:shadow-md"
             >
-              {isSaving ? '保存中...' : 'この内容で保存'}
+              {isSaving ? (
+                <span className="inline-flex items-center gap-2">
+                  <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  保存中...
+                </span>
+              ) : 'この内容で保存'}
             </button>
           </div>
         </form>

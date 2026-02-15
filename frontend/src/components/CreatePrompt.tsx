@@ -119,18 +119,18 @@ export default function CreatePrompt({ onPromptCreated }: Props) {
 
   return (
     <>
-      <form onSubmit={handleSuggestCategory} className="mb-8 bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Create New Prompt</h2>
+      <form onSubmit={handleSuggestCategory} className="mb-8 bg-white/60 backdrop-blur-md p-6 rounded-2xl shadow-md hover:shadow-lg border border-white/80 transition-all duration-300">
+        <h2 className="text-2xl font-bold mb-4 text-slate-800">Create New Prompt</h2>
 
         {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl relative mb-4" role="alert">
                 <strong className="font-bold">エラー: </strong>
                 <span className="block sm:inline">{error}</span>
             </div>
         )}
-        
-        <div className="mb-4">
-          <label htmlFor="content" className="block text-gray-700 font-bold mb-2">
+
+        <div className="mb-5">
+          <label htmlFor="content" className="block text-slate-600 font-semibold mb-2 text-sm">
             Prompt
           </label>
           <textarea
@@ -140,16 +140,24 @@ export default function CreatePrompt({ onPromptCreated }: Props) {
             placeholder="ここにプロンプトを入力してください..."
             rows={5}
             required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow-sm appearance-none border border-slate-200 rounded-lg w-full py-2.5 px-3 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition duration-200"
           />
         </div>
 
         <button
           type="submit"
           disabled={isSuggesting}
-          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out disabled:bg-blue-400"
+          className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 active:scale-[0.98] text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 transition-all duration-200 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:shadow-md"
         >
-          {isSuggesting ? '分析中...' : 'AIでカテゴリを提案'}
+          {isSuggesting ? (
+            <span className="inline-flex items-center gap-2">
+              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              AIが分析中...
+            </span>
+          ) : 'AIでカテゴリを提案'}
         </button>
       </form>
 
