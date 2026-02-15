@@ -197,6 +197,7 @@ def create_prompt(prompt: PromptCreate):
 
     try:
         conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute(
             "INSERT INTO prompts (title, category, content, summary, tags) VALUES (?, ?, ?, ?, ?)",
@@ -204,7 +205,7 @@ def create_prompt(prompt: PromptCreate):
         )
         conn.commit()
         last_id = cursor.lastrowid
-        
+
         # 保存したデータを取得して返す
         cursor.execute("SELECT * FROM prompts WHERE id = ?", (last_id,))
         new_prompt_row = cursor.fetchone()
@@ -213,10 +214,7 @@ def create_prompt(prompt: PromptCreate):
         if new_prompt_row is None:
             raise HTTPException(status_code=404, detail="作成したプロンプトが見つかりません。")
 
-        # Rowオブジェクトを辞書に変換
-        new_prompt_dict = dict(zip([c[0] for c in cursor.description], new_prompt_row))
-        
-        return new_prompt_dict
+        return dict(new_prompt_row)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
