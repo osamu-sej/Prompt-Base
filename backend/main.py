@@ -76,14 +76,36 @@ def _parse_llm_json_response(response_content: str) -> dict:
         json_str = json_str[:-3]
     return json.loads(json_str.strip())
 
+def _fallback_summary_and_category(content: str):
+    """Gemini APIが使えない場合のフォールバック（簡易キーワードベース）"""
+    summary = content[:50] + ("..." if len(content) > 50 else "")
+    categories = ["一般", "テキスト生成", "その他"]
+    keyword_map = {
+        "コード": ["プログラミング", "コード生成", "開発"],
+        "python": ["プログラミング", "Python", "開発"],
+        "翻訳": ["翻訳", "言語", "ローカライゼーション"],
+        "要約": ["要約", "テキスト処理", "分析"],
+        "メール": ["ビジネス", "メール作成", "コミュニケーション"],
+        "ブログ": ["ライティング", "ブログ", "コンテンツ作成"],
+        "マーケティング": ["マーケティング", "広告", "ビジネス"],
+        "教育": ["教育", "学習", "チュートリアル"],
+    }
+    content_lower = content.lower()
+    for keyword, cats in keyword_map.items():
+        if keyword.lower() in content_lower:
+            categories = cats
+            break
+    return {"summary": summary, "suggested_categories": categories}
+
 def generate_summary_and_category(content: str, existing_categories: list[str]):
-    """Geminiを使ってプロンプトの要約とカテゴリを生成する"""
+    """Geminiを使ってプロンプトの要約とカテゴリを生成する。失敗時はフォールバック。"""
     if not os.getenv("GEMINI_API_KEY"):
-        raise ValueError("GEMINI_API_KEYが設定されていません。")
+        print("GEMINI_API_KEYが設定されていません。フォールバックモードで動作します。")
+        return _fallback_summary_and_category(content)
 
     try:
-        llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.2)
-        
+        llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.2)
+
         category_hint = f"既存のカテゴリの例です: {', '.join(existing_categories)}" if existing_categories else "まだカテゴリはありません。"
 
         prompt_template = f"""
@@ -101,25 +123,27 @@ def generate_summary_and_category(content: str, existing_categories: list[str]):
         {content}
         ---
         """
-        
+
         response = llm.invoke(prompt_template)
         data = _parse_llm_json_response(response.content)
         return data
-        
+
     except Exception as e:
-        print(f"Gemini API呼び出しでエラーが発生しました: {e}")
-        # APIが失敗した場合もJSON形式でエラーを返す
-        raise HTTPException(status_code=500, detail="AIによる分析中にエラーが発生しました。")
+        print(f"Gemini API呼び出しでエラーが発生しました。フォールバックモードに切り替えます: {e}")
+        return _fallback_summary_and_category(content)
 
 def generate_title_and_tags(content: str):
-    """Geminiを使ってプロンプトのタイトルとタグを生成する"""
+    """Geminiを使ってプロンプトのタイトルとタグを生成する。失敗時はフォールバック。"""
+    fallback_title = content[:30] + "..." if len(content) > 30 else content
+    fallback_tags = ""
+
     if not os.getenv("GEMINI_API_KEY"):
         print("GEMINI_API_KEYが設定されていません。タイトルとタグの自動生成をスキップします。")
-        return content[:30] + "..." if len(content) > 30 else content, ""
+        return fallback_title, fallback_tags
 
     try:
-        llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.3)
-        
+        llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.3)
+
         prompt_template = f"""
         以下のプロンプトの内容を分析し、最適な「タイトル(title)」と「タグ(tags)」を生成してください。
         回答は必ず以下のJSON形式で返してください。
@@ -133,14 +157,14 @@ def generate_title_and_tags(content: str):
         {content}
         ---
         """
-        
+
         response = llm.invoke(prompt_template)
         data = _parse_llm_json_response(response.content)
         return data["title"], data["tags"]
-        
+
     except Exception as e:
-        print(f"Gemini API呼び出しでエラーが発生しました: {e}")
-        return "（タイトル生成失敗）", ""
+        print(f"Gemini API呼び出しでエラーが発生しました。フォールバックを使用します: {e}")
+        return fallback_title, fallback_tags
 
 # --- APIエンドポイント定義 ---
 
