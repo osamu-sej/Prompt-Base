@@ -3,8 +3,6 @@ import CreatePrompt from './components/CreatePrompt';
 import { ChevronDownIcon, ClipboardDocumentIcon, CheckIcon, SparklesIcon } from '@heroicons/react/24/outline'; // アイコンをインポート
 import './index.css';
 
-const API_BASE = 'http://localhost:8000';
-
 // Promptの型定義を更新
 interface Prompt {
   id: number;
@@ -69,7 +67,7 @@ function App() {
 
   const fetchPrompts = async () => {
     try {
-      const response = await fetch(`${API_BASE}/prompts`);
+      const response = await fetch('/prompts');
       if (!response.ok) {
         throw new Error('プロンプトの取得に失敗しました。');
       }

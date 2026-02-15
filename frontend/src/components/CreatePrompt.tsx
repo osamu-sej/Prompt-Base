@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import CategorySuggestionModal from './CategorySuggestionModal';
 
-const API_BASE = 'http://localhost:8000';
-
 // 親コンポーネントと共有する型定義
 interface Prompt {
   id: number;
@@ -25,7 +23,7 @@ interface AiSuggestion {
 
 export default function CreatePrompt({ onPromptCreated }: Props) {
   const [content, setContent] = useState('');
-  
+
   // 状態管理を細分化
   const [isSuggesting, setIsSuggesting] = useState(false); // カテゴリ提案APIのローディング
   const [isSaving, setIsSaving] = useState(false);         // 保存APIのローディング
@@ -40,20 +38,22 @@ export default function CreatePrompt({ onPromptCreated }: Props) {
       alert('プロンプトを入力してください。');
       return;
     }
-    
+
     setError(null);
     setIsSuggesting(true);
 
     try {
-      const response = await fetch(`${API_BASE}/categorize`, {
+      const response = await fetch('/categorize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content }),
       });
 
       if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.detail || 'カテゴリの提案に失敗しました。');
+        const text = await response.text();
+        let detail = `サーバーエラー (${response.status})`;
+        try { detail = JSON.parse(text).detail || detail; } catch {}
+        throw new Error(detail);
       }
 
       const suggestion: AiSuggestion = await response.json();
@@ -82,25 +82,27 @@ export default function CreatePrompt({ onPromptCreated }: Props) {
     };
 
     try {
-      const response = await fetch(`${API_BASE}/prompts`, {
+      const response = await fetch('/prompts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newPromptPayload),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || '保存に失敗しました。');
+        const text = await response.text();
+        let detail = `サーバーエラー (${response.status})`;
+        try { detail = JSON.parse(text).detail || detail; } catch {}
+        throw new Error(detail);
       }
 
       const newPrompt: Prompt = await response.json();
-      
+
       // 成功したらフォームと状態をリセット
       setContent('');
       setModalIsOpen(false);
       setAiSuggestion(null);
       alert('プロンプトを保存しました！');
-      
+
       // 親コンポーネントに通知
       onPromptCreated(newPrompt);
 
@@ -111,7 +113,7 @@ export default function CreatePrompt({ onPromptCreated }: Props) {
       setIsSaving(false);
     }
   };
-  
+
   const handleCloseModal = () => {
     setModalIsOpen(false);
     setAiSuggestion(null);

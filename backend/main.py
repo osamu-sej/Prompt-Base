@@ -104,7 +104,7 @@ def generate_summary_and_category(content: str, existing_categories: list[str]):
         return _fallback_summary_and_category(content)
 
     try:
-        llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.2)
+        llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.2, timeout=10)
 
         category_hint = f"既存のカテゴリの例です: {', '.join(existing_categories)}" if existing_categories else "まだカテゴリはありません。"
 
@@ -142,7 +142,7 @@ def generate_title_and_tags(content: str):
         return fallback_title, fallback_tags
 
     try:
-        llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.3)
+        llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.3, timeout=10)
 
         prompt_template = f"""
         以下のプロンプトの内容を分析し、最適な「タイトル(title)」と「タグ(tags)」を生成してください。
