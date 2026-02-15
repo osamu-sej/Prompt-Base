@@ -99,12 +99,17 @@ def _fallback_summary_and_category(content: str):
 
 def generate_summary_and_category(content: str, existing_categories: list[str]):
     """Geminiを使ってプロンプトの要約とカテゴリを生成する。失敗時はフォールバック。"""
-    if not os.getenv("GEMINI_API_KEY"):
-        print("GEMINI_API_KEYが設定されていません。フォールバックモードで動作します。")
+    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    if not api_key:
+        print("APIキーが設定されていません。フォールバックモードで動作します。")
         return _fallback_summary_and_category(content)
 
     try:
-        llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.2, timeout=10)
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-2.0-flash",
+            temperature=0.2,
+            google_api_key=api_key,
+        )
 
         category_hint = f"既存のカテゴリの例です: {', '.join(existing_categories)}" if existing_categories else "まだカテゴリはありません。"
 
@@ -137,12 +142,17 @@ def generate_title_and_tags(content: str):
     fallback_title = content[:30] + "..." if len(content) > 30 else content
     fallback_tags = ""
 
-    if not os.getenv("GEMINI_API_KEY"):
-        print("GEMINI_API_KEYが設定されていません。タイトルとタグの自動生成をスキップします。")
+    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    if not api_key:
+        print("APIキーが設定されていません。タイトルとタグの自動生成をスキップします。")
         return fallback_title, fallback_tags
 
     try:
-        llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.3, timeout=10)
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-2.0-flash",
+            temperature=0.3,
+            google_api_key=api_key,
+        )
 
         prompt_template = f"""
         以下のプロンプトの内容を分析し、最適な「タイトル(title)」と「タグ(tags)」を生成してください。
@@ -171,23 +181,20 @@ def generate_title_and_tags(content: str):
 @app.post("/categorize")
 def categorize_prompt(request: CategorizeRequest):
     """プロンプトの内容を受け取り、AIがカテゴリと要約を提案する"""
+    # 既存のカテゴリ一覧を取得
+    existing_categories = []
     try:
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
-        # 既存のカテゴリ一覧を取得してAIへのヒントにする
         cursor.execute("SELECT DISTINCT category FROM prompts WHERE category IS NOT NULL AND category != ''")
         rows = cursor.fetchall()
         existing_categories = [row[0] for row in rows]
         conn.close()
-        
-        ai_response = generate_summary_and_category(request.content, existing_categories)
-        return ai_response
-    except ValueError as e:
-         raise HTTPException(status_code=400, detail=str(e))
-    except HTTPException as e:
-        raise e # 内部で発生したHTTPExceptionをそのまま再送出
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"サーバー内部エラー: {e}")
+        print(f"カテゴリ取得でエラー（無視して続行）: {e}")
+
+    # AI分析（失敗時はフォールバックが返る）
+    return generate_summary_and_category(request.content, existing_categories)
 
 
 @app.post("/prompts")
@@ -230,6 +237,15 @@ def get_prompts():
     
     # Rowオブジェクトを直接辞書に変換してリストを生成
     return [dict(row) for row in rows]
+
+@app.get("/health")
+def health_check():
+    """ヘルスチェック用エンドポイント"""
+    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    return {
+        "status": "ok",
+        "gemini_api_key_set": bool(api_key),
+    }
 
 if __name__ == "__main__":
     import uvicorn
