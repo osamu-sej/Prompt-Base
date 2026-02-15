@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import CategorySuggestionModal from './CategorySuggestionModal';
 
+const API_BASE = 'http://localhost:8000';
+
 // 親コンポーネントと共有する型定義
 interface Prompt {
   id: number;
@@ -43,8 +45,7 @@ export default function CreatePrompt({ onPromptCreated }: Props) {
     setIsSuggesting(true);
 
     try {
-      // Viteの設定でプロキシしている'http://localhost:8000'にリクエスト
-      const response = await fetch('/categorize', {
+      const response = await fetch(`${API_BASE}/categorize`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content }),
@@ -81,8 +82,7 @@ export default function CreatePrompt({ onPromptCreated }: Props) {
     };
 
     try {
-      // Viteの設定でプロキシしている'http://localhost:8000'にリクエスト
-      const response = await fetch('/prompts', {
+      const response = await fetch(`${API_BASE}/prompts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newPromptPayload),
